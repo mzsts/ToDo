@@ -1,8 +1,30 @@
-﻿<MudList>
+﻿@inject NavigationManager NavigationManager
 
-</MudList>
+<MudPaper Width="80%">
+    <MudList Clickable="true" @bind-SelectedItem="selectedItem">
+        <MudListSubheader>
+            @Item.Title sub items
+        </MudListSubheader>
+        @foreach(var subItem in Item.SubItems)
+        {
+            <MudListItem Value="subItem">
+            <MudPaper Elevation="3">
+                <MudChip Color="Color.Info">
+                    @subItem.Status
+                </MudChip>
+                @Item.Title
+                 <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary"
+                               OnClick="@(() => NavigationManager.NavigateTo($"/edittodoitem/{subItem.Id}"))">Edit</MudButton>
+            </MudPaper>
+            </MudListItem>
+            
+        }
+    </MudList>
+</MudPaper>
 
 @code {
     [Parameter]
     public ToDoItem Item { get; set; }
+
+    private MudListItem selectedItem;
 }

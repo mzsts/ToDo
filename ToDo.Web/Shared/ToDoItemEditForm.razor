@@ -131,6 +131,8 @@
             context.ToDoItems.Remove(Item);
             await context.SaveChangesAsync();
         }
+
+        StateHasChanged();
     }
 
     private async Task UpdateToDoItem()
@@ -142,8 +144,9 @@
             var id = Item.Id;
 
             await context.SaveChangesAsync();
-            //context.Update(Item);
         }
+
+        StateHasChanged();
     }
 
     private async Task InsertToDoItem()
@@ -158,14 +161,11 @@
             {
                 Parent.SubItems.Add(Item);
                 context.Update(Parent);
-
-                var id = Item.Id;
-                //context.Update(Item);
             }
 
             await context.SaveChangesAsync();
         }
 
-        //NavigationManager.NavigateTo("/edittodoitem/{Item.Id}");
+        StateHasChanged();
     }
 }

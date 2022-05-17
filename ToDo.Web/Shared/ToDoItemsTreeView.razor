@@ -1,0 +1,32 @@
+﻿@inject IDbContextFactory<ToDoDbContext> ContextFactory
+@inject NavigationManager NavigationManager
+
+@if(Items is null)
+{
+    <MudProgressCircular Color="Color.Info" Size="Size.Large" Indeterminate="true"></MudProgressCircular>
+}
+else
+{
+     <MudTreeView Items="Items" @bind-SelectedValue="SelectedValue" Hover="true">
+        <ItemTemplate>
+            <MudTreeViewItem Items="@context.SubItems.ToHashSet()" Value="@context" 
+                             Text="@context.Title" EndText="@context.SubItems?.Count.ToString()"/>
+        </ItemTemplate>
+    </MudTreeView>
+}
+
+@code {
+    private HashSet<ToDoItem> Items { get; set; }
+
+    private ToDoItem SelectedValue { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using(var context = ContextFactory.CreateDbContext())
+        {
+            Items = context.ToDoItems.ToHashSet();
+        }
+
+        await base.OnInitializedAsync();
+    }
+}

@@ -87,14 +87,22 @@
     </MudGrid>
 </EditForm>*@
 
-@if(item == null)
-{
-    <MudProgressCircular Color="Color.Info" Size="Size.Large" Indeterminate="true" />
-}
-else
+@if(ParentId == 0)
 {
     <ToDoItemEditForm IsCreation="true" Item="item" Parent="parent"></ToDoItemEditForm>
 }
+else
+{
+    @if(parent is null && ParentId != 0)
+    {
+        <MudProgressCircular Color="Color.Info" Size="Size.Large" Indeterminate="true" />
+    }
+    else
+    {
+        <ToDoItemEditForm IsCreation="true" Item="item" Parent="parent"></ToDoItemEditForm>
+    }
+}
+
 
 @code {
     [Parameter]

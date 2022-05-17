@@ -1,0 +1,31 @@
+﻿@page "/edittodoitem/{id:int}"
+
+@inject IDbContextFactory<ToDoDbContext> ContextFactory
+
+@if(item is null)
+{
+    <MudProgressCircular Color="Color.Info" Size="Size.Large" Indeterminate="true"></MudProgressCircular>
+}
+else
+{
+    <ToDoItemEditForm IsCreation="false" Item="item" Parent="null"></ToDoItemEditForm>
+    <ToDoSubItemsList Item="item"></ToDoSubItemsList> 
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private ToDoItem item;
+
+    protected override async Task OnInitializedAsync()
+    {
+        using(var context = ContextFactory.CreateDbContext())
+        {
+            var toDoItems = await context.ToDoItems.ToListAsync();
+            item = toDoItems?.FirstOrDefault(i => i.Id == Id);
+        }
+
+        await base.OnInitializedAsync();
+    }
+}

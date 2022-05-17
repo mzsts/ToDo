@@ -1,0 +1,126 @@
+﻿@page "/createtodoitem"
+@page "/createtodosubitem/{parentId:int}"
+
+@inject IDbContextFactory<ToDoDbContext> ContextFactory
+
+@*<EditForm Model="@item" OnValidSubmit="OnValidSubmit" Class="ma-4">
+    <DataAnnotationsValidator/>
+    <MudGrid Justify="Justify.Center">
+        <MudItem xs="12" sm="7">
+            <MudCard Outlined>
+                <MudCardHeader>
+                    <MudGrid Justify="Justify.SpaceBetween">
+                        <MudItem>
+                            Create ToDo
+                        </MudItem>
+                        <MudItem>
+                            <MudChip Color="Color.Info">@item.Status</MudChip>
+                        </MudItem>
+                    </MudGrid>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudTextField Label="Title" Variant="Variant.Outlined" HelperText="Min. 5 characters"
+                                    Clearable="true" Immediate="true"
+                                    @bind-Value="item.Title" For="@(() => item.Title)"/>
+
+                    <MudTextField T="string" Label="Desctiption" Variant="Variant.Outlined" 
+                                    HelperText="Min. 5 characters" Lines="3"
+                                    Clearable="true" Immediate="true"
+                                    @bind-Value="item.Description" For="@(() => item.Description)"/>
+                    <MudPaper Class="d-flex justify-space-around">
+                        <MudDatePicker Label="Creating date" Variant="Variant.Outlined"
+                                       ReadOnly="true" Disabled HelperText="Sets automatically"
+                                       @bind-Date="item.CreationDate"/>
+
+                        <MudDatePicker Label="Completion date" Variant="Variant.Outlined"
+                                       ReadOnly="true" Disabled HelperText="Sets automatically"
+                                       @bind-Date="item.CompletionDate"/>
+                    </MudPaper>
+                    <MudPaper Class="d-flex justify-space-around">
+                        <MudTextField T="TimeSpan?" Label="Estimation time" Variant="Variant.Outlined"
+                                  Clearable="true" Immediate="true" HelperText="hh:mm:ss. Less then 1 day" 
+                                  @bind-Value="item.EstimationTime" For="@(() => item.EstimationTime)"/>
+
+                        <MudTextField T="TimeSpan?" Label="Completion time" Variant="Variant.Outlined"
+                                  Disabled Immediate="true" HelperText="Sets automatically" 
+                                  @bind-Value="item.CompletionTime" For="@(() => item.CompletionTime)"/>
+                    </MudPaper>
+
+                    <MudSelect T="ToDoItemStatus" Label="Status" Variant="Variant.Outlined" 
+                               OpenIcon="@Icons.Filled.KeyboardArrowDown" IconSize="Size.Large"
+                               AdornmentColor="Color.Tertiary" AnchorOrigin="Origin.BottomCenter"
+                               @bind-Value="item.Status">
+                        @foreach(var statusType in Enum.GetValues<ToDoItemStatus>())
+                        {
+                            <MudSelectItem Value="statusType"></MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" 
+                               Color="Color.Primary" Class="ml-auto">Save</MudButton>
+                    <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled"
+                               Color="Color.Error" Class="ml-auto">Cancel</MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+        <MudItem xs="12" sm="5">
+            <MudPaper Class="pa-4 mud-height-full" Height="50%">
+                <MudText Typo="Typo.subtitle2">Validation Summary</MudText>
+                @if (success)
+                {
+                    <MudText Color="Color.Success">Success</MudText>
+                }
+                else
+                {
+                    <MudText Color="@Color.Error">
+                        <ValidationSummary />
+                    </MudText>
+                }
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12">
+            <MudText Typo="Typo.body2" Align="Align.Center">
+                Fill out the form correctly to create ToDo item.
+            </MudText>
+        </MudItem>
+    </MudGrid>
+</EditForm>*@
+
+@if(item == null)
+{
+    <MudProgressCircular Color="Color.Info" Size="Size.Large" Indeterminate="true" />
+}
+else
+{
+    <ToDoItemEditForm IsCreation="true" Item="item" Parent="parent"></ToDoItemEditForm>
+}
+
+@code {
+    [Parameter]
+    public int ParentId { get; set; }
+
+    private bool success;
+
+    private ToDoItem item = new();
+    private ToDoItem parent = null;
+
+    private void OnValidSubmit(EditContext context)
+    {
+        success = true;
+        StateHasChanged();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using(var context = ContextFactory.CreateDbContext())
+        {
+            if(ParentId != 0)
+            {
+                parent = await context.ToDoItems.FirstOrDefaultAsync(item => item.Id == ParentId);
+            }
+        }
+
+        await base.OnInitializedAsync();
+    }
+}

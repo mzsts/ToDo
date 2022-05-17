@@ -2,18 +2,30 @@
 
 <PageTitle>ToDo.Web</PageTitle>
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+<MudThemeProvider IsDarkMode="true"/>
+<MudDialogProvider/>
+<MudSnackbarProvider/>
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-        </div>
+<MudLayout>
+    <MudAppBar>
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+        ToDo Manager
+    </MudAppBar>
+    <MudDrawer @bind-Open="@_drawerOpen">
+        @*<MudTreeView>
 
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
+        </MudTreeView>*@
+    </MudDrawer>
+    <MudMainContent >
+        @Body
+    </MudMainContent>
+</MudLayout>
+
+@code {
+    bool _drawerOpen = true;
+
+    void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+}

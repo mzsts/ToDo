@@ -12,7 +12,7 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddMudServices();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContextFactory<ToDoDbContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddDbContextFactory<ToDoDbContext>(options => options.UseSqlServer(connectionString, b => b.MigrationsAssembly("ToDo.Web")));
 
 var app = builder.Build();
 

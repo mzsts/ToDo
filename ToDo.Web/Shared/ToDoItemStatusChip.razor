@@ -1,0 +1,17 @@
+﻿<MudChip Color="GetColorForStatus()">@Status</MudChip>
+
+@code {
+    [Parameter]
+    public ToDoItemStatus Status { get; set; }
+
+    private Color GetColorForStatus()
+    {
+        return Status switch
+        {
+            ToDoItemStatus.Assigned => Color.Info,
+            ToDoItemStatus.InProgress => Color.Primary,
+            ToDoItemStatus.Suspended => Color.Warning,
+            ToDoItemStatus.Compleated => Color.Success,
+        };
+    }
+}

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 using ToDo.Domain.Enums;
 
@@ -10,9 +11,14 @@ public class ToDoItem
 
     [Key]
     public int Id { get; set; }
+    
+    [NotMapped]
+    public bool HasSubItems => SubItems is not null && SubItems.Any();
+
+    public bool IsSubItem { get; set; }
 
     [MinLength(5)]
-    [MaxLength(20)]
+    [MaxLength(40)]
     [Required(ErrorMessage = "Title is required")]
     public string Title { get; set; }
 

@@ -9,7 +9,11 @@
 else
 {
     <ToDoItemEditForm IsCreation="false" Item="item" Parent="null"></ToDoItemEditForm>
-    <ToDoSubItemsList Item="item"></ToDoSubItemsList> 
+
+    if(item.HasSubItems)
+    {
+        <ToDoSubItemsList Item="item"></ToDoSubItemsList>
+    }
 }
 
 @code {
@@ -20,12 +24,26 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        await InitializeItem();
+
+        await base.OnInitializedAsync();
+    }
+
+    protected override async void OnParametersSet()
+    {
+        await InitializeItem();
+
+        base.OnParametersSet();
+    }
+
+    private async Task InitializeItem()
+    {
         using(var context = ContextFactory.CreateDbContext())
         {
             var toDoItems = await context.ToDoItems.ToListAsync();
             item = toDoItems?.FirstOrDefault(i => i.Id == Id);
         }
 
-        await base.OnInitializedAsync();
+        StateHasChanged();
     }
 }

@@ -1,30 +1,57 @@
 ﻿@inject NavigationManager NavigationManager
 
-<MudPaper Width="80%">
-    <MudList Clickable="true" @bind-SelectedItem="selectedItem">
-        <MudListSubheader>
-            @Item.Title sub items
-        </MudListSubheader>
-        @foreach(var subItem in Item.SubItems)
-        {
-            <MudListItem Value="subItem">
-            <MudPaper Elevation="3">
-                <MudChip Color="Color.Info">
-                    @subItem.Status
-                </MudChip>
-                @Item.Title
-                 <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary"
-                               OnClick="@(() => NavigationManager.NavigateTo($"/edittodoitem/{subItem.Id}"))">Edit</MudButton>
-            </MudPaper>
-            </MudListItem>
-            
-        }
-    </MudList>
-</MudPaper>
+<MudGrid Justify="Justify.Center">
+    <MudItem>
+        <MudList Clickable="true" Color="Color.Info">
+            <MudListSubheader>
+                <MudTextField T="string" Text="SubItems" Adornment="Adornment.Start" Variant="Variant.Text"
+                              AdornmentIcon="@Icons.Outlined.FormatListBulleted" AdornmentColor="Color.Info"/>
+            </MudListSubheader>
+            @foreach(var subItem in Item.SubItems)
+            {
+                <MudListItem Value="subItem">
+                    <ChildContent>
+                        <MudGrid Justify="Justify.SpaceBetween">
+                            <MudItem>
+                                <ToDoItemStatusChip Status="subItem.Status"/>
+                            </MudItem>
+                            <MudItem>
+                                <MudText Typo="Typo.body1" Align="Align.Center" Color="Color.Primary">
+                                    @subItem.Title
+                                </MudText>
+                            </MudItem>
+                            <MudItem>
+                                <MudButton StartIcon="@Icons.Filled.Edit" Color="Color.Info" Variant="Variant.Outlined"
+                                            OnClick="@(() => NavigationManager.NavigateTo($"/edittodoitem/{subItem.Id}"))">Edit</MudButton>
+                                <MudButton StartIcon="@Icons.Filled.DeleteForever" Color="Color.Error" 
+                                           Variant="Variant.Outlined" >Delete</MudButton>
+                            </MudItem>
+                        </MudGrid>
+                    </ChildContent>
+                </MudListItem>
+            }
+        </MudList>
+    </MudItem>
+</MudGrid>
+
+
 
 @code {
     [Parameter]
     public ToDoItem Item { get; set; }
 
-    private MudListItem selectedItem;
+    private void TryDeleteSubItem(ToDoItem subItem)
+    {
+
+    }
+
+    private void DeleteSubItem()
+    {
+
+    }
+
+    private void ShowCanNotBeDeletedDialog()
+    {
+        
+    }
 }

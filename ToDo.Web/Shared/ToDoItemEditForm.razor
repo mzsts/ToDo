@@ -12,7 +12,7 @@
                             @(IsCreation ? "Create ToDo" : "Edit ToDo")
                         </MudItem>
                         <MudItem>
-                            <MudChip Color="Color.Info">@Item.Status</MudChip>
+                            <ToDoItemStatusChip Status="@Item.Status"/>
                         </MudItem>
                     </MudGrid>
                 </MudCardHeader>
@@ -67,16 +67,26 @@
                     }
                 </MudCardContent>
                 <MudCardActions>
-                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Success">Save</MudButton>
-                    @if(IsCreation is false)
-                    {
-                        <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary"
-                               OnClick="@(() => NavigationManager.NavigateTo($"/createtodosubitem/{Item.Id}"))">Add sub item</MudButton>
-                        <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled"
-                               Color="Color.Error" OnClick="DeleteToDoItem">Delete</MudButton>
-                    }
-                    <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled"
-                               Color="Color.Secondary" OnClick="@(() => NavigationManager.NavigateTo("/"))">Cancel</MudButton>
+                    <MudGrid Justify="Justify.SpaceBetween">
+                        <MudItem>
+                            <MudButtonGroup OverrideStyles="false">
+                        <MudButton ButtonType="ButtonType.Submit" Color="Color.Success" Variant="Variant.Outlined">Save</MudButton>
+                        <MudButton ButtonType="ButtonType.Button" Color="Color.Secondary" Variant="Variant.Outlined"
+                                       OnClick="@(() => NavigationManager.NavigateTo("/"))">Cancel</MudButton>
+                            </MudButtonGroup>
+                        </MudItem>
+                        <MudItem>
+                            @if(IsCreation is false)
+                        {
+                            <MudButtonGroup OverrideStyles="false">
+                                <MudButton ButtonType="ButtonType.Button" Color="Color.Secondary" Variant="Variant.Outlined"
+                                           OnClick="@(() => NavigationManager.NavigateTo($"/createtodosubitem/{Item.Id}"))">Add sub item</MudButton>
+                                <MudButton ButtonType="ButtonType.Button" Color="Color.Error" 
+                                           Variant="Variant.Outlined" OnClick="DeleteToDoItem">Delete</MudButton>
+                            </MudButtonGroup>
+                        }
+                        </MudItem>
+                    </MudGrid>
                 </MudCardActions>
             </MudCard>
         </MudItem>
@@ -94,11 +104,6 @@
                     </MudText>
                 }
             </MudPaper>
-        </MudItem>
-        <MudItem xs="12">
-            <MudText Typo="Typo.body2" Align="Align.Center">
-                Fill out the form correctly to create ToDo item.
-            </MudText>
         </MudItem>
     </MudGrid>
 </EditForm>
@@ -133,6 +138,8 @@
         }
 
         StateHasChanged();
+
+        NavigationManager.NavigateTo("/");
     }
 
     private async Task UpdateToDoItem()
@@ -140,8 +147,6 @@
         using(var context = ContextFactory.CreateDbContext())
         {
             context.Update(Item);
-
-            var id = Item.Id;
 
             await context.SaveChangesAsync();
         }
@@ -159,6 +164,7 @@
             }
             else
             {
+                Item.IsSubItem = true;
                 Parent.SubItems.Add(Item);
                 context.Update(Parent);
             }
@@ -167,5 +173,7 @@
         }
 
         StateHasChanged();
+
+        NavigationManager.NavigateTo("/");
     }
 }

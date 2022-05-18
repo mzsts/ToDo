@@ -7,24 +7,29 @@
 }
 else
 {
-     <MudTreeView Items="Items" @bind-SelectedValue="SelectedValue" Hover="true">
+    <MudTreeView T="ToDoItem" Items="Items" Hover="true">
         <ItemTemplate>
-            <MudTreeViewItem Items="@context.SubItems.ToHashSet()" Value="@context" 
-                             Text="@context.Title" EndText="@context.SubItems?.Count.ToString()"/>
+            <MudTreeViewItem Items="@context.SubItems.ToHashSet()" Value="@context" Text="@context.Title" TextTypo="Typo.caption"
+                             EndText="@context.Status.ToString()" Icon="@Icons.Filled.Label" EndTextTypo="Typo.subtitle2"
+                             IconColor="@(context.IsSubItem ? Color.Warning : Color.Success)"
+                             OnClick="@(() => NavigationManager.NavigateTo($"/edittodoitem/{context.Id}"))">
+            </MudTreeViewItem>
         </ItemTemplate>
     </MudTreeView>
+
+    <MudButton StartIcon="@Icons.Outlined.AddCircleOutline" Color="Color.Success" Variant="Variant.Outlined" Class="ma-2"
+                   OnClick="@(() => NavigationManager.NavigateTo("/createtodoitem"))">Create new</MudButton>
 }
 
 @code {
     private HashSet<ToDoItem> Items { get; set; }
 
-    private ToDoItem SelectedValue { get; set; }
-
     protected override async Task OnInitializedAsync()
     {
         using(var context = ContextFactory.CreateDbContext())
         {
-            Items = context.ToDoItems.ToHashSet();
+            var temp = await context.ToDoItems.ToArrayAsync();
+            Items = temp?.Where(item => item.IsSubItem == false).ToHashSet();
         }
 
         await base.OnInitializedAsync();

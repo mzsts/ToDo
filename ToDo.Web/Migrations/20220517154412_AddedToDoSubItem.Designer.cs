@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ToDo.DataAccess;
 
@@ -11,9 +12,10 @@ using ToDo.DataAccess;
 namespace ToDo.Web.Migrations
 {
     [DbContext(typeof(ToDoDbContext))]
-    partial class ToDoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220517154412_AddedToDoSubItem")]
+    partial class AddedToDoSubItem
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,12 +45,13 @@ namespace ToDo.Web.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<TimeSpan?>("EstimationTime")
                         .IsRequired()
                         .HasColumnType("time");
-
-                    b.Property<bool>("IsSubItem")
-                        .HasColumnType("bit");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -58,17 +61,26 @@ namespace ToDo.Web.Migrations
                         .HasMaxLength(40)
                         .HasColumnType("nvarchar(40)");
 
+                    b.HasKey("Id");
+
+                    b.ToTable("ToDoItems");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("ToDoItem");
+                });
+
+            modelBuilder.Entity("ToDo.Domain.Models.ToDoSubItem", b =>
+                {
+                    b.HasBaseType("ToDo.Domain.Models.ToDoItem");
+
                     b.Property<int?>("ToDoItemId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
-
                     b.HasIndex("ToDoItemId");
 
-                    b.ToTable("ToDoItems");
+                    b.HasDiscriminator().HasValue("ToDoSubItem");
                 });
 
-            modelBuilder.Entity("ToDo.Domain.Models.ToDoItem", b =>
+            modelBuilder.Entity("ToDo.Domain.Models.ToDoSubItem", b =>
                 {
                     b.HasOne("ToDo.Domain.Models.ToDoItem", null)
                         .WithMany("SubItems")

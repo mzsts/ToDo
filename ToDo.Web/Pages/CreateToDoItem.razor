@@ -1,8 +1,6 @@
 ﻿@page "/createtodoitem"
 @page "/createtodosubitem/{parentId:int}"
 
-@inject IDbContextFactory<ToDoDbContext> ContextFactory
-
 @if(ParentId == 0)
 {
     <ToDoItemEditForm IsCreation="true" Item="item" ParentId="ParentId"></ToDoItemEditForm>

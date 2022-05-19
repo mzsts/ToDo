@@ -1,6 +1,4 @@
 ﻿@page "/edittodoitem/{id:int}"
-
-@inject IDbContextFactory<ToDoDbContext> ContextFactory
 @inject ToDoService ToDoService
 
 @if(item is null)
@@ -25,6 +23,8 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        ToDoService.OnUpdate += async () => await InvokeAsync(StateHasChanged);
+
         item = ToDoService.ToDoItems.FirstOrDefault(x => x.Id == Id);
 
         await base.OnInitializedAsync();

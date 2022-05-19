@@ -1,16 +1,16 @@
 ﻿<MudDialog Options="dialogOptions">
     <TitleContent>
         <MudText Align="Align.Start" Typo="Typo.body1" Color="Color.Error">
-            Error
+            @Localizer["Error"]
         </MudText>
     </TitleContent>
     <DialogContent>
         <MudText Color="Color.Info" Typo="Typo.body2">
-            Only a terminal task can be deleted. Since this task contains subtasks, it cannot be deleted.
+            @Localizer["Cannot delete"]
         </MudText>
     </DialogContent>
     <DialogActions>
-        <MudButton Color="Color.Error" OnClick="Cancel">Ok</MudButton>
+        <MudButton Color="Color.Error" OnClick="Cancel">@Localizer["Ok"]</MudButton>
     </DialogActions>
 </MudDialog>
 

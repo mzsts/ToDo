@@ -13,6 +13,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="6.0.5" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore" Version="6.0.4" />
     <PackageReference Include="MudBlazor" Version="6.0.10" />
   </ItemGroup>
@@ -20,10 +21,6 @@
   <ItemGroup>
     <ProjectReference Include="..\ToDo.DataAccess\ToDo.DataAccess.csproj" />
     <ProjectReference Include="..\ToDo.Domain\ToDo.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Resources\" />
   </ItemGroup>
 
 </Project>

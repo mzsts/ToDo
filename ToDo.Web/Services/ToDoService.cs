@@ -45,18 +45,6 @@ public class ToDoService
         OnUpdate?.Invoke();
     }
 
-    public async Task UpdateSubItemsFor(ToDoItem item)
-    {
-        foreach (var subItem in item.SubItems)
-        {
-            _context.Update(subItem);
-        }
-
-        await _context.SaveChangesAsync();
-
-        OnUpdate?.Invoke();
-    }
-
     public async Task DeleteToDoItem(ToDoItem item)
     {
         _context.ToDoItems.Remove(item);

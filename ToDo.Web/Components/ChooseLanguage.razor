@@ -1,0 +1,38 @@
+﻿@inject IConfiguration Configuration
+
+@if (caltures is not null)
+{
+<MudSelect Variant="Variant.Outlined" OpenIcon="@Icons.Outlined.OutlinedFlag" T="string"
+           AdornmentColor="Color.Info" Margin="Margin.Dense" Value="@defaultCalture" ValueChanged="@((e) => OnSelectedCaltureChanged(e))">
+    @foreach(var calture in caltures)
+        {
+        <MudSelectItem Value="@calture.Key">@calture.Value</MudSelectItem>
+        }
+</MudSelect>
+}
+
+
+@code {
+    private string defaultCalture = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
+
+    private Dictionary<string, string> caltures;
+
+    protected override void OnInitialized()
+    {
+        caltures = Configuration.GetSection("Caltures")
+            .GetChildren().ToDictionary(x => x.Key, x => x.Value);
+
+        base.OnInitialized();
+    }
+
+    private void OnSelectedCaltureChanged(string calture)
+    {
+        if (string.IsNullOrWhiteSpace(calture)) return;
+
+        var uri = new Uri(NavigationManager.Uri).GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
+
+        var query = $"?calture={Uri.EscapeDataString(calture)}&redirectUri={Uri.EscapeDataString(uri)}";
+
+        NavigationManager.NavigateTo("Calture/SetCalture" + query, forceLoad: true);
+    }
+}

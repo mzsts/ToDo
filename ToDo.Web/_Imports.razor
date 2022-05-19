@@ -5,6 +5,8 @@
 @using Microsoft.AspNetCore.Components.Routing
 @using Microsoft.AspNetCore.Components.Web
 @using Microsoft.AspNetCore.Components.Web.Virtualization
+@using Microsoft.Extensions.Configuration
+@using Microsoft.Extensions.Localization
 @using Microsoft.JSInterop
 @using Microsoft.EntityFrameworkCore
 @using MudBlazor
@@ -15,5 +17,8 @@
 @using ToDo.Web.Shared
 @using ToDo.Web.Services
 @using ToDo.Web.Pages
+@using ToDo.Web.Components;
 @using ToDo.Web.Components.ToDoItem
+
 @inject NavigationManager NavigationManager
+@inject IStringLocalizer<App> Localizer

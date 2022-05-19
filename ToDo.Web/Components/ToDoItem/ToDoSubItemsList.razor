@@ -8,7 +8,7 @@
         <MudListSubheader>
             <MudText Color="Color.Info" Typo="Typo.h4">
                 <MudIcon Icon="@Icons.Outlined.FormatListBulleted" Color="Color.Info" />
-                SubItems
+                @Localizer["SubItems"]
             </MudText>
         </MudListSubheader>
         @foreach (var subItem in Item.SubItems)
@@ -26,9 +26,9 @@
                         </MudItem>
                         <MudItem>
                             <MudButton StartIcon="@Icons.Filled.Edit" Color="Color.Info" Variant="Variant.Outlined"
-                                   OnClick="@(() => NavigationManager.NavigateTo($"/edittodoitem/{subItem.Id}"))">Edit</MudButton>
+                                   OnClick="@(() => NavigationManager.NavigateTo($"/edittodoitem/{subItem.Id}"))">@Localizer["Edit"]</MudButton>
                             <MudButton StartIcon="@Icons.Filled.DeleteForever" Color="Color.Error"
-                                   Variant="Variant.Outlined" OnClick="@(() => TryDeleteSubItem(subItem))">Delete</MudButton>
+                                   Variant="Variant.Outlined" OnClick="@(() => TryDeleteSubItem(subItem))">@Localizer["Delete"]</MudButton>
                         </MudItem>
                     </MudGrid>
                 </ChildContent>

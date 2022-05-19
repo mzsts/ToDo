@@ -16,7 +16,7 @@ else
     </MudTreeView>
 
     <MudButton StartIcon="@Icons.Outlined.AddCircleOutline" Color="Color.Success" Variant="Variant.Outlined" Class="ma-2"
-                   OnClick="@(() => NavigationManager.NavigateTo("/createtodoitem"))">Create new</MudButton>
+                   OnClick="@(() => NavigationManager.NavigateTo("/createtodoitem"))">@Localizer["Create"] Create new</MudButton>
 }
 
 @code {

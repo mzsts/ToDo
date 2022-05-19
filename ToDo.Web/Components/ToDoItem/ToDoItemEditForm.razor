@@ -10,7 +10,7 @@
                     <MudGrid Justify="Justify.SpaceBetween">
                         <MudItem>
                             <MudText Color="Color.Info" Typo="Typo.h3">
-                                @(IsCreation ? "Create ToDo" : "Edit ToDo")
+                                @(IsCreation ? Localizer["Create"] : Localizer["Edit"]) ToDo
                             </MudText>
                         </MudItem>
                         <MudItem>
@@ -21,14 +21,14 @@
                 <MudCardContent>
                     <MudPaper Class="d-flex" Width="100%">
                         <MudPaper Width="75%">
-                            <MudTextField Label="Title" Variant="Variant.Outlined" HelperText="Min. 5 characters"
+                            <MudTextField Label="@Localizer["Title"]" Variant="Variant.Outlined" HelperText="@Localizer["Min. 5 characters"]"
                                           Clearable="true" Immediate="true"
                                           @bind-Value="Item.Title" For="@(() => Item.Title)" />
                         </MudPaper>
                         <MudPaper Width="25%">
                             @if (IsCreation)
                             {
-                                <MudSelect T="ToDoItemStatus" Label="Status" Variant="Variant.Outlined"
+                                <MudSelect T="ToDoItemStatus" Label="@Localizer["Status"]" Variant="Variant.Outlined"
                                        OpenIcon="@Icons.Filled.KeyboardArrowDown" IconSize="Size.Large"
                                        AdornmentColor="Color.Tertiary" AnchorOrigin="Origin.BottomCenter"
                                        @bind-Value="Item.Status">
@@ -38,7 +38,7 @@
                             }
                             else
                             {
-                                <MudSelect T="ToDoItemStatus" Label="Status" Variant="Variant.Outlined"
+                                <MudSelect T="ToDoItemStatus" Label="@Localizer["Status"]" Variant="Variant.Outlined"
                                        OpenIcon="@Icons.Filled.KeyboardArrowDown" IconSize="Size.Large"
                                        AdornmentColor="Color.Tertiary" AnchorOrigin="Origin.BottomCenter"
                                        @bind-Value="Item.Status">
@@ -50,28 +50,28 @@
                             }
                         </MudPaper>
                     </MudPaper>
-                    <MudTextField T="string" Label="Desctiption" Variant="Variant.Outlined"
-                                  HelperText="Min. 5 characters" Lines="3"
+                    <MudTextField T="string" Label="@Localizer["Desctiption"]" Variant="Variant.Outlined"
+                                  HelperText="@Localizer["Min. 5 characters"]" Lines="3"
                                   Clearable="true" Immediate="true"
                                   @bind-Value="Item.Description" For="@(() => Item.Description)" />
                     <MudPaper Class="d-flex justify-content-between">
-                        <MudDatePicker Label="Creating date" Variant="Variant.Outlined"
-                                       ReadOnly="true" Disabled HelperText="Sets automatically"
+                        <MudDatePicker Label="@Localizer["Creating date"]" Variant="Variant.Outlined"
+                                       ReadOnly="true" Disabled HelperText="@Localizer["Sets automatically"]"
                                        @bind-Date="Item.CreationDate" />
 
-                        <MudDatePicker Label="Completion date" Variant="Variant.Outlined"
-                                       ReadOnly="true" Disabled HelperText="Sets automatically"
+                        <MudDatePicker Label="@Localizer["Completion date"]" Variant="Variant.Outlined"
+                                       ReadOnly="true" Disabled HelperText="@Localizer["Sets automatically"]"
                                        @bind-Date="Item.CompletionDate" />
                     </MudPaper>
                     <MudPaper Class="d-flex" Width="100%">
                         <MudPaper Class="d-flex" Width="50%">
-                            <MudTextField T="TimeSpan?" Label="Estimation time" Variant="Variant.Outlined"
+                            <MudTextField T="TimeSpan?" Label="@Localizer["Estimation time"]" Variant="Variant.Outlined"
                                           Clearable="true" Immediate="true" Format="d\.hh\:mm" HelperText="d.hh:mm"
                                           @bind-Value="Item.EstimationTime" For="@(() => Item.EstimationTime)" />
                         </MudPaper>
                         <MudPaper Class="d-flex" Width="50%">
-                            <MudTextField T="TimeSpan?" Label="Completion time" Variant="Variant.Outlined"
-                                          Disabled Immediate="true" HelperText="Sets automatically"
+                            <MudTextField T="TimeSpan?" Label="@Localizer["Completion time"]" Variant="Variant.Outlined"
+                                          Disabled Immediate="true" HelperText="@Localizer["Sets automatically"]"
                                           Format="dd\.hh\:mm"
                                           @bind-Value="Item.CompletionTime" For="@(() => Item.CompletionTime)" />
                         </MudPaper>
@@ -83,9 +83,9 @@
                             <MudButtonGroup OverrideStyles="false">
                                 <MudButton ButtonType="ButtonType.Submit" Color="Color.Success"
                                            StartIcon="@Icons.Material.Filled.Save"
-                                           Variant="Variant.Outlined" Size="Size.Large">Save</MudButton>
+                                           Variant="Variant.Outlined" Size="Size.Large">@Localizer["Save"]</MudButton>
                                 <MudButton ButtonType="ButtonType.Button" Color="Color.Secondary" Variant="Variant.Outlined"
-                                           OnClick="@(() => NavigationManager.NavigateTo("/"))" Size="Size.Large">Cancel</MudButton>
+                                           OnClick="@(() => NavigationManager.NavigateTo("/"))" Size="Size.Large">@Localizer["Cancel"]</MudButton>
                             </MudButtonGroup>
                         </MudItem>
                         <MudItem>
@@ -93,11 +93,11 @@
                             {
                                 <MudButtonGroup OverrideStyles="false">
                                     <MudButton ButtonType="ButtonType.Button" Color="Color.Inherit" Variant="Variant.Outlined" 
-                                               Size="Size.Large" StartIcon="@Icons.Filled.AddCircle"
-                                               OnClick="@(() => NavigationManager.NavigateTo($"/createtodosubitem/{Item.Id}"))">Add sub item</MudButton>
+                                               OnClick="@(() => NavigationManager.NavigateTo($"/createtodosubitem/{Item.Id}"))"
+                                               Size="Size.Large" StartIcon="@Icons.Filled.AddCircle">@Localizer["Add sub item"]</MudButton>
                                     <MudButton ButtonType="ButtonType.Button" Color="Color.Error" 
                                                Size="Size.Large" StartIcon="@Icons.Filled.DeleteForever"
-                                               Variant="Variant.Outlined" OnClick="DeleteClickHandle">Delete</MudButton>
+                                               Variant="Variant.Outlined" OnClick="DeleteClickHandle">@Localizer["Delete"]</MudButton>
                                 </MudButtonGroup>
                             }
                         </MudItem>
@@ -145,11 +145,6 @@
     private async Task UpdateClickHandle()
     {
         await ToDoService.UpdateToDoItem(Item);
-
-        //if (Item.Status == ToDoItemStatus.Compleated)
-        //{
-        //    await ToDoService.UpdateSubItemsFor(Item);
-        //}
     }
 
     private async Task InsertClickHandle()

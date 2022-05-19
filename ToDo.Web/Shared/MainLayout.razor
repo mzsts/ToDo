@@ -1,5 +1,7 @@
 ﻿@inherits LayoutComponentBase
+
 @inject NavigationManager NavigationManager
+
 
 <PageTitle>ToDo.Web</PageTitle>
 
@@ -10,16 +12,20 @@
 <MudLayout>
         <MudAppBar>
             <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
-            ToDo Manager
+            @Localizer["AppBar title"]
+            <MudSpacer />
+            <MudPaper>
+                <ChooseLanguage/>
+            </MudPaper>
             <MudSpacer />
             <MudButton EndIcon="@Icons.Material.Filled.Home" aria-label="home" 
                     Color="Color.Info" Size="Size.Large" Variant="Variant.Outlined"
-                    OnClick="@((e) => NavigationManager.NavigateTo("/"))">Home</MudButton>
+                    OnClick="@((e) => NavigationManager.NavigateTo("/"))">@Localizer["Home"]</MudButton>
         </MudAppBar>
             <MudDrawer @bind-Open="@drawerOpen" Width="300px" Class="m-3">
                 <MudDrawerHeader>
                     <MudText Align="Align.Center" Color="Color.Info" Typo="Typo.h4">
-                        Items
+                        @Localizer["Treeview header"]
                     </MudText>
                 </MudDrawerHeader>
                 <ToDoItemsTreeView>

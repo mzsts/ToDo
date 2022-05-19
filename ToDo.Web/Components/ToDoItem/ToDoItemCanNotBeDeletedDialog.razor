@@ -1,0 +1,31 @@
+﻿<MudDialog Options="dialogOptions">
+    <TitleContent>
+        <MudText Align="Align.Start" Typo="Typo.body1" Color="Color.Error">
+            Error
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudText Color="Color.Info" Typo="Typo.body2">
+            Only a terminal task can be deleted. Since this task contains subtasks, it cannot be deleted.
+        </MudText>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Error" OnClick="Cancel">Ok</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] 
+    MudDialogInstance MudDialog { get; set; }
+
+    private DialogOptions dialogOptions = new() 
+    { 
+        CloseButton = false, 
+        CloseOnEscapeKey = false,
+        DisableBackdropClick = true,
+        NoHeader = false,
+        Position = DialogPosition.Center 
+    };
+
+    private void Cancel() => MudDialog.Cancel();
+}

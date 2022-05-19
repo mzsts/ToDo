@@ -1,6 +1,7 @@
 ﻿@page "/edittodoitem/{id:int}"
 
 @inject IDbContextFactory<ToDoDbContext> ContextFactory
+@inject ToDoService ToDoService
 
 @if(item is null)
 {
@@ -8,11 +9,11 @@
 }
 else
 {
-    <ToDoItemEditForm IsCreation="false" Item="item" Parent="null"></ToDoItemEditForm>
+    <ToDoItemEditForm IsCreation="false" Item="item" ParentId="Id"></ToDoItemEditForm>
 
     if(item.HasSubItems)
     {
-        <ToDoSubItemsList Item="item"></ToDoSubItemsList>
+       <ToDoSubItemsList Item="item"></ToDoSubItemsList>
     }
 }
 
@@ -24,26 +25,15 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        await InitializeItem();
+        item = ToDoService.ToDoItems.FirstOrDefault(x => x.Id == Id);
 
         await base.OnInitializedAsync();
     }
 
     protected override async void OnParametersSet()
     {
-        await InitializeItem();
+        item = ToDoService.ToDoItems.FirstOrDefault(x => x.Id == Id);
 
         base.OnParametersSet();
-    }
-
-    private async Task InitializeItem()
-    {
-        using(var context = ContextFactory.CreateDbContext())
-        {
-            var toDoItems = await context.ToDoItems.ToListAsync();
-            item = toDoItems?.FirstOrDefault(i => i.Id == Id);
-        }
-
-        StateHasChanged();
     }
 }

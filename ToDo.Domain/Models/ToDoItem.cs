@@ -31,41 +31,65 @@ public class ToDoItem
         get => status;
         set 
         {
-            status = value switch
+            switch(value)
             {
-                ToDoItemStatus.Suspended => status == ToDoItemStatus.InProgress ? ToDoItemStatus.Suspended : status,
-                ToDoItemStatus.Compleated => status == ToDoItemStatus.InProgress && CanBeCompleated() ? SetCompleated() : status,
-                _ => value
-            };
+                case ToDoItemStatus.Suspended:
+                    status = status == ToDoItemStatus.InProgress ? value : status;
+                    ResetCopletionDateTime();
+                    break;
+                case ToDoItemStatus.Compleated:
+                    if (CanBeCompleated())
+                    {
+                        SetCompleated();
+                    }
+                    break;
+                default:
+                    status = value;
+                    ResetCopletionDateTime();
+                    break;
+            }
         } 
     }
 
     public DateTime? CreationDate { get; set; } = DateTime.Now;
 
-    [Required(ErrorMessage = "EstimationTime is required")]
-    public TimeSpan? EstimationTime { get; set; }
+    public long EstimationTimePeriodTicks { get; set; }
+    public long CompletionTimePeriodTicks { get; set; }
 
-    public TimeSpan? CompletionTime { get; set; }
+    [Required(ErrorMessage = "EstimationTime is required")]
+    [NotMapped]
+    public TimeSpan? EstimationTime 
+    {
+        get => TimeSpan.FromTicks(EstimationTimePeriodTicks);
+        set => EstimationTimePeriodTicks = value.HasValue ? value.Value.Ticks : 0;
+    }
+
+    [NotMapped]
+    public TimeSpan? CompletionTime 
+    {
+        get => TimeSpan.FromTicks(CompletionTimePeriodTicks);
+        set => CompletionTimePeriodTicks = value.HasValue ? value.Value.Ticks : 0;
+    }
 
     public DateTime? CompletionDate { get; set; }
 
     public ICollection<ToDoItem> SubItems { get; set; } = new List<ToDoItem>();
 
-    private ToDoItemStatus SetCompleated()
+    private void SetCompleated()
     {
+        status = ToDoItemStatus.Compleated;
+
         foreach(var item in SubItems)
         {
-            item.Status = SetCompleated();
+            item.SetCompleated();
         }
 
         SetCompletionTime();
-
-        return ToDoItemStatus.Compleated;
     }
 
     private bool CanBeCompleated()
     {
-        return status is ToDoItemStatus.InProgress && IsSubItemsCanBeCompleated();
+        return (status is ToDoItemStatus.InProgress or ToDoItemStatus.Compleated) && IsSubItemsCanBeCompleated();
     }
 
     private bool IsSubItemsCanBeCompleated()
@@ -77,7 +101,7 @@ public class ToDoItem
 
         foreach (var item in SubItems)
         {
-            if (item.CanBeCompleated() is false || item.Status is not ToDoItemStatus.Compleated)
+            if (item.CanBeCompleated() is false)
             {
                 return false;
             }
@@ -86,9 +110,15 @@ public class ToDoItem
         return true;
     }
 
+    private void ResetCopletionDateTime()
+    {
+        CompletionDate = null;
+        CompletionTime = null;
+    }
+
     private void SetCompletionTime()
     {
         CompletionDate = DateTime.Now;
-        CompletionTime = CreationDate?.Subtract(CompletionDate.Value);
+        CompletionTime = CompletionDate?.Subtract(CreationDate.Value);
     }
 }

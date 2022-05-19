@@ -1,8 +1,11 @@
-﻿<MudChip Color="GetColorForStatus()">@Status</MudChip>
+﻿<MudChip Color="GetColorForStatus()" Size="Size">@Status</MudChip>
 
 @code {
     [Parameter]
     public ToDoItemStatus Status { get; set; }
+
+    [Parameter]
+    public Size Size { get; set; } = Size.Medium;
 
     private Color GetColorForStatus()
     {

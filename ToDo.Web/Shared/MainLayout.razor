@@ -1,31 +1,44 @@
 ﻿@inherits LayoutComponentBase
+@inject NavigationManager NavigationManager
 
 <PageTitle>ToDo.Web</PageTitle>
 
 <MudThemeProvider IsDarkMode="true"/>
-<MudDialogProvider/>
+<MudDialogProvider DisableBackdropClick="true" Position="DialogPosition.Center"/>
 <MudSnackbarProvider/>
 
 <MudLayout>
-    <MudAppBar>
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
-        ToDo Manager
-    </MudAppBar>
-    <MudDrawer @bind-Open="@_drawerOpen">
-        <ToDoItemsTreeView>
+        <MudAppBar>
+            <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+            ToDo Manager
+            <MudSpacer />
+            <MudButton EndIcon="@Icons.Material.Filled.Home" aria-label="home" 
+                    Color="Color.Info" Size="Size.Large" Variant="Variant.Outlined"
+                    OnClick="@((e) => NavigationManager.NavigateTo("/"))">Home</MudButton>
+        </MudAppBar>
 
-        </ToDoItemsTreeView>
-    </MudDrawer>
+
+            <MudDrawer @bind-Open="@drawerOpen" Width="300px" Class="m-3">
+                <MudDrawerHeader>
+                    <MudText Align="Align.Center" Color="Color.Info" Typo="Typo.h4">
+                        Items
+                    </MudText>
+                </MudDrawerHeader>
+                <ToDoItemsTreeView>
+
+                </ToDoItemsTreeView>
+            </MudDrawer>
+
     <MudMainContent >
         @Body
     </MudMainContent>
 </MudLayout>
 
 @code {
-    bool _drawerOpen = true;
+    bool drawerOpen = true;
 
     void DrawerToggle()
     {
-        _drawerOpen = !_drawerOpen;
+        drawerOpen = !drawerOpen;
     }
 }

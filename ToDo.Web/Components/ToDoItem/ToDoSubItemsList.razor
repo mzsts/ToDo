@@ -1,0 +1,69 @@
+﻿@inject NavigationManager NavigationManager
+@inject IDialogService DialogService
+@inject ToDoService ToDoService 
+
+
+<MudPaper Class="mx-3">
+    <MudList Clickable="true" Color="Color.Info">
+        <MudListSubheader>
+            <MudText Color="Color.Info" Typo="Typo.h4">
+                <MudIcon Icon="@Icons.Outlined.FormatListBulleted" Color="Color.Info" />
+                SubItems
+            </MudText>
+        </MudListSubheader>
+        @foreach (var subItem in Item.SubItems)
+        {
+            <MudListItem Value="subItem">
+                <ChildContent>
+                    <MudGrid Justify="Justify.SpaceBetween">
+                        <MudItem>
+                            <ToDoItemStatusChip Status="subItem.Status" />
+                        </MudItem>
+                        <MudItem>
+                            <MudText Typo="Typo.body1" Align="Align.Center" Color="Color.Primary">
+                                @subItem.Title
+                            </MudText>
+                        </MudItem>
+                        <MudItem>
+                            <MudButton StartIcon="@Icons.Filled.Edit" Color="Color.Info" Variant="Variant.Outlined"
+                                   OnClick="@(() => NavigationManager.NavigateTo($"/edittodoitem/{subItem.Id}"))">Edit</MudButton>
+                            <MudButton StartIcon="@Icons.Filled.DeleteForever" Color="Color.Error"
+                                   Variant="Variant.Outlined" OnClick="@(() => TryDeleteSubItem(subItem))">Delete</MudButton>
+                        </MudItem>
+                    </MudGrid>
+                </ChildContent>
+            </MudListItem>
+        }
+    </MudList>
+</MudPaper>
+
+@code {
+    [Parameter]
+    public ToDoItem Item { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        ToDoService.OnUpdate += async () => await InvokeAsync(StateHasChanged);
+
+        await base.OnInitializedAsync();
+    }
+
+    private async Task TryDeleteSubItem(ToDoItem subItem)
+    {
+        if (subItem.HasSubItems)
+        {
+            DialogService.Show<ToDoItemCanNotBeDeletedDialog>();
+            return;
+        }
+        else
+        {
+            await DeleteSubItem(subItem);
+        }
+    }
+
+    private async Task DeleteSubItem(ToDoItem subItem)
+    {
+        await ToDoService.DeleteToDoItem(subItem);
+    }
+}

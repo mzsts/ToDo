@@ -1,5 +1,6 @@
 ﻿@inject IDbContextFactory<ToDoDbContext> ContextFactory
 @inject NavigationManager NavigationManager
+@inject ToDoService ToDoService
 
 @if(Items is null)
 {
@@ -7,13 +8,11 @@
 }
 else
 {
-    <MudTreeView T="ToDoItem" Items="Items" Hover="true">
+    <MudTreeView T="ToDoItem" Items="@Items" Hover="true">
         <ItemTemplate>
             <MudTreeViewItem Items="@context.SubItems.ToHashSet()" Value="@context" Text="@context.Title" TextTypo="Typo.caption"
-                             EndText="@context.Status.ToString()" Icon="@Icons.Filled.Label" EndTextTypo="Typo.subtitle2"
-                             IconColor="@(context.IsSubItem ? Color.Warning : Color.Success)"
-                             OnClick="@(() => NavigationManager.NavigateTo($"/edittodoitem/{context.Id}"))">
-            </MudTreeViewItem>
+                             IconColor="@(context.IsSubItem ? Color.Warning : Color.Success)" Icon="@Icons.Filled.Label"
+                             OnClick="@(() => NavigationManager.NavigateTo($"/edittodoitem/{context.Id}"))"/>
         </ItemTemplate>
     </MudTreeView>
 
@@ -22,15 +21,12 @@ else
 }
 
 @code {
-    private HashSet<ToDoItem> Items { get; set; }
+    private HashSet<ToDoItem> Items => ToDoService.ToDoItems.Where(item => item.IsSubItem == false).ToHashSet();
 
     protected override async Task OnInitializedAsync()
     {
-        using(var context = ContextFactory.CreateDbContext())
-        {
-            var temp = await context.ToDoItems.ToArrayAsync();
-            Items = temp?.Where(item => item.IsSubItem == false).ToHashSet();
-        }
+
+        ToDoService.OnUpdate += async () => await InvokeAsync(StateHasChanged);
 
         await base.OnInitializedAsync();
     }

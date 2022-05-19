@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 
 using ToDo.DataAccess;
+using ToDo.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,8 @@ builder.Services.AddMudServices();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContextFactory<ToDoDbContext>(options => options.UseSqlServer(connectionString, b => b.MigrationsAssembly("ToDo.Web")));
+
+builder.Services.AddSingleton<ToDoService>();
 
 var app = builder.Build();
 

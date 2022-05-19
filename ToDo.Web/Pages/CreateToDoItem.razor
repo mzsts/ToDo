@@ -1,0 +1,21 @@
+﻿@page "/createtodoitem"
+@page "/createtodosubitem/{parentId:int}"
+
+@inject IDbContextFactory<ToDoDbContext> ContextFactory
+
+@if(ParentId == 0)
+{
+    <ToDoItemEditForm IsCreation="true" Item="item" ParentId="ParentId"></ToDoItemEditForm>
+}
+else
+{
+    <ToDoItemEditForm IsCreation="true" Item="item" ParentId="ParentId"></ToDoItemEditForm>
+}
+
+
+@code {
+    [Parameter]
+    public int ParentId { get; set; }
+
+    private ToDoItem item = new();
+}

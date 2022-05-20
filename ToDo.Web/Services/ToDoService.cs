@@ -7,48 +7,53 @@ namespace ToDo.Web.Services;
 
 public class ToDoService
 {
-    private readonly ToDoDbContext _context;
+    private readonly IDbContextFactory<ToDoDbContext> _contextFactory;
 
     public event Action OnUpdate;
 
-    public IEnumerable<ToDoItem> ToDoItems => _context.ToDoItems.ToArray();
+    public IEnumerable<ToDoItem> ToDoItems => _contextFactory.CreateDbContext().ToDoItems.ToArray();
 
-    public ToDoService(IDbContextFactory<ToDoDbContext> contextFactory)
-    {
-        _context = contextFactory.CreateDbContext();
-    }
+    public ToDoService(IDbContextFactory<ToDoDbContext> contextFactory) => _contextFactory = contextFactory;
 
     public async Task InsertToDoItem(ToDoItem item, int parentId = 0)
     {
-        if (parentId == 0)
-        {
-            await _context.ToDoItems.AddAsync(item);
-        }
-        else
-        {
-            item.IsSubItem = true;
-            var parent = _context.ToDoItems.First(x => x.Id == parentId);
-            parent.SubItems.Add(item);
-            _context.Update(parent);
-        }
+        using(var context = await _contextFactory.CreateDbContextAsync())
+        { 
+            if (parentId == 0)
+            {
+                await context.ToDoItems.AddAsync(item);
+            }
+            else
+            {
+                item.IsSubItem = true;
+                var parent = context.ToDoItems.First(x => x.Id == parentId);
+                parent.SubItems.Add(item);
+                context.Update(parent);
+            }
 
-        await _context.SaveChangesAsync();
-
+            await context.SaveChangesAsync();
+        }
         OnUpdate?.Invoke();
     }
 
     public async Task UpdateToDoItem(ToDoItem item)
     {
-        _context.Update(item);
-        await _context.SaveChangesAsync();
+        using (var context = await _contextFactory.CreateDbContextAsync())
+        {
+            context.Update(item);
+            await context.SaveChangesAsync();
+        }
 
         OnUpdate?.Invoke();
     }
 
     public async Task DeleteToDoItem(ToDoItem item)
     {
-        _context.ToDoItems.Remove(item);
-        await _context.SaveChangesAsync();
+        using (var context = await _contextFactory.CreateDbContextAsync())
+        {
+            context.ToDoItems.Remove(item);
+            await context.SaveChangesAsync();
+        }
 
         OnUpdate?.Invoke();
     }

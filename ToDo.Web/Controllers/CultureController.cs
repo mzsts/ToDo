@@ -4,15 +4,15 @@ using Microsoft.AspNetCore.Mvc;
 namespace ToDo.Web.Controllers;
 
 [Route("[controller]/[action]")]
-public class CaltureController : Controller
+public class CultureController : Controller
 {
-    public IActionResult SetCalture(string calture, string redirectUri)
+    public IActionResult SetCalture(string culture, string redirectUri)
     {
-        if(calture is not null)
+        if(culture is not null)
         {
             HttpContext.Response.Cookies.Append(
                 CookieRequestCultureProvider.DefaultCookieName,
-                CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(calture)));
+                CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)));
         }
 
         return LocalRedirect(redirectUri);

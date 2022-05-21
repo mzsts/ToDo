@@ -6,7 +6,7 @@ namespace ToDo.Web.Controllers;
 [Route("[controller]/[action]")]
 public class CultureController : Controller
 {
-    public IActionResult SetCalture(string culture, string redirectUri)
+    public IActionResult SetCulture(string culture, string redirectUri)
     {
         if(culture is not null)
         {

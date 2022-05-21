@@ -1,38 +1,38 @@
 ﻿@inject IConfiguration Configuration
 
-@if (caltures is not null)
+@if (cultures is not null)
 {
 <MudSelect Variant="Variant.Outlined" OpenIcon="@Icons.Outlined.OutlinedFlag" T="string"
-           AdornmentColor="Color.Info" Margin="Margin.Dense" Value="@defaultCalture" ValueChanged="@((e) => OnSelectedCaltureChanged(e))">
-    @foreach(var calture in caltures)
+           AdornmentColor="Color.Info" Margin="Margin.Dense" Value="@defaultCulture" ValueChanged="@((e) => OnSelectedCaltureChanged(e))">
+    @foreach(var culture in cultures)
         {
-        <MudSelectItem Value="@calture.Key">@calture.Value</MudSelectItem>
+        <MudSelectItem Value="@culture.Key">@culture.Value</MudSelectItem>
         }
 </MudSelect>
 }
 
 
 @code {
-    private string defaultCalture = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
+    private string defaultCulture = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
 
-    private Dictionary<string, string> caltures;
+    private Dictionary<string, string> cultures;
 
     protected override void OnInitialized()
     {
-        caltures = Configuration.GetSection("Caltures")
+        cultures = Configuration.GetSection("Cultures")
             .GetChildren().ToDictionary(x => x.Key, x => x.Value);
 
         base.OnInitialized();
     }
 
-    private void OnSelectedCaltureChanged(string calture)
+    private void OnSelectedCaltureChanged(string culture)
     {
-        if (string.IsNullOrWhiteSpace(calture)) return;
+        if (string.IsNullOrWhiteSpace(culture)) return;
 
         var uri = new Uri(NavigationManager.Uri).GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
 
-        var query = $"?calture={Uri.EscapeDataString(calture)}&redirectUri={Uri.EscapeDataString(uri)}";
+        var query = $"?culture={Uri.EscapeDataString(culture)}&redirectUri={Uri.EscapeDataString(uri)}";
 
-        NavigationManager.NavigateTo("Calture/SetCalture" + query, forceLoad: true);
+        NavigationManager.NavigateTo("Culture/SetCulture" + query, forceLoad: true);
     }
 }
